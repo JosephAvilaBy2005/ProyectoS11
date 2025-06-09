@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 import sqlite3
+import os
+
 app = Flask(__name__)
 @app.route('/')
 @app.route('/home')
@@ -34,5 +36,8 @@ def participants():
     cursor.execute('SELECT * FROM PARTICIPANTS')
     data = cursor.fetchall()
     return render_template("participants.html", data=data)
+
 if __name__ == '__main__':
-    app.run(debug=False)
+    if not os.path.exists(app.config ['UPLOAD_FOLDER']):
+        os.makedirs(app.config [ 'UPLOAD_FOLDER'])
+    app.run(debug=True, host="0.0.0.0", port=os.getenv("PORT", default=5000))
